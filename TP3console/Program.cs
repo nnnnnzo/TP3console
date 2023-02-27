@@ -44,6 +44,12 @@ namespace TP3console
             Exo2Q7();
             Exo2Q8();
             Exo2Q9();
+            AddUser();
+            Edit();
+            Delete();
+            AddAvis();
+            AddRng();
+
 
             Console.ReadKey();
         }
