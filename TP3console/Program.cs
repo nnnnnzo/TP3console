@@ -1,5 +1,6 @@
 ﻿using Castle.Components.DictionaryAdapter;
 using Microsoft.EntityFrameworkCore;
+using System.IO.Pipes;
 using System.Linq;
 using TP3console.Models.EntityFramework;
 
@@ -138,6 +139,57 @@ namespace TP3console
 
             }
             Console.WriteLine(user);
+        }
+
+        public static void AddUser()
+        {
+            var ctx = new FilmsDBContext();
+            Utilisateur moi = new Utilisateur();
+            moi.Login = "lagadece";
+            moi.Email = "email1@test.fr";
+            moi.Pwd= "password";
+
+            ctx.Utilisateurs.Add(moi);
+            ctx.SaveChanges();
+        }
+
+        public static void Edit() {
+            var ctx = new FilmsDBContext();
+
+            var films = ctx.Films.First(film => film.Nom.ToLower() == "l'armee des douze singes");
+            films.Description = "desc test";
+            ctx.SaveChanges();
+
+        }
+
+        public static void Delete()
+        {
+            var ctx = new FilmsDBContext();
+            var films = ctx.Films.First(film => film.Nom.ToLower() == "l'armee des douze singes");
+
+            foreach (var avis in ctx.Avis.Where(s => s.Film == films.Id))
+            {
+                ctx.Avis.Remove(avis);
+            }
+            ctx.Films.Remove(films);
+            ctx.SaveChanges();
+        }
+
+        public static void AddAvis() { 
+            var ctx = new FilmsDBContext();
+            var films = ctx.Films.First(film => film.Nom.ToLower() == "blade runner");
+            Avi avi = new Avi();
+            var userMoi = ctx.Utilisateurs.First(user => user.Login.ToLower() == "lagadece");
+            avi.Utilisateur = userMoi.Id;
+            avi.Film = films.Id;
+            avi.Avis = "Masterclass";
+            avi.Note = (decimal)0.99;
+            avi.UtilisateurNavigation = userMoi;
+            avi.FilmNavigation = films;
+
+            ctx.Avis.Add(avi);
+            ctx.SaveChanges();
+
         }
 
 
