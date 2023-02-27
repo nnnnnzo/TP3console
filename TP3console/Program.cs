@@ -41,6 +41,8 @@ namespace TP3console
             Exo2Q5();
             Exo2Q6();
             Exo2Q7();
+            Exo2Q8();
+            Exo2Q9();
 
             Console.ReadKey();
         }
@@ -108,8 +110,36 @@ namespace TP3console
         public static void Exo2Q8()
         {
             var ctx = new FilmsDBContext();
-            var film = ctx.Films.Include(f => f.Avis).Where(f => f.Nom == "Pulp Fiction");
-         }
+            //Pour que cela marche, il faut que la requête envoie les mêmes noms de colonnes que les classes c#.
+            decimal moyenne = 0;
+            int count = 0;
+            foreach (var avi in ctx.Avis.Where(film => film.FilmNavigation.Nom.ToLower()=="pulp fiction").ToList())
+            {
+                count++;
+                moyenne += avi.Note;
+            }
+            moyenne /= count;
+            Console.WriteLine(moyenne);
+        }
+
+        public static void Exo2Q9()
+        {
+            var ctx = new FilmsDBContext();
+            decimal noteMax = 0;
+            string user = "";
+            foreach (var avi in ctx.Avis.ToList())
+            {
+                if (avi.Note > noteMax)
+                {
+                    noteMax = avi.Note;
+                    user = avi.Utilisateur.ToString();
+                }
+                    
+
+            }
+            Console.WriteLine(user);
+        }
+
 
     }
 }
